@@ -463,7 +463,15 @@ void Schematic::drawContents(QPainter *p, int, int, int, int)
     PostedPaintEvent p = PostedPaintEvents[i];
     // QPainter painter2(viewport()); for if(p.PaintOnViewport)
 
-    Painter.Painter->setPen(Qt::black);
+    // on some systems Qt::black with a dark theme is white, so choose a high
+    // contrast color programmatically
+    QColor linecolor;
+    if (QucsSettings.BGColor.lightness() > 128)
+        linecolor = QucsSettings.BGColor.darker(250);
+    else
+        linecolor = QucsSettings.BGColor.lighter(250);
+
+    Painter.Painter->setPen(linecolor);
     switch(p.pe)
     {
       case _NotRop:
